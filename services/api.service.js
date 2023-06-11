@@ -134,7 +134,7 @@ module.exports = {
 				token = cookies["jwt-token"];
 			}
 
-			ctx.meta.roles = ["$everyone"];
+			ctx.meta.roles = ["public"];
 
 			// Verify JWT token
 			const user = await this.validateUserToken(ctx, token)
@@ -147,7 +147,6 @@ module.exports = {
 
 			let res = await ctx.call("v1.roles.hasAccess", { roles: ctx.meta.roles, permissions: [permission] });
 
-		
 			if (res !== true)
 				throw new UnAuthorizedError("You have no right for this operation!", 401, "ERR_HAS_NO_ACCESS", { roles: ctx.meta.roles });
 
@@ -163,7 +162,7 @@ module.exports = {
 						id: user.id
 					});
 
-					ctx.meta.roles.push("$authenticated");
+					ctx.meta.roles.push("authenticated");
 					if (Array.isArray(user.roles)) ctx.meta.roles.push(...user.roles);
 					ctx.meta.token = token;
 					ctx.meta.userID = user.id;
