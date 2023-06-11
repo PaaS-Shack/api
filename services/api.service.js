@@ -82,7 +82,8 @@ module.exports = {
 				authentication: true,
 				//authorization: true,
 
-				autoAliases: true, mergeParams: true,
+				autoAliases: true,
+				mergeParams: true,
 
 				aliases: {},
 
@@ -134,7 +135,6 @@ module.exports = {
 			}
 
 			ctx.meta.roles = ["$everyone"];
-			ctx.meta.roles = [];
 
 			// Verify JWT token
 			const user = await this.validateUserToken(ctx, token)
@@ -143,20 +143,13 @@ module.exports = {
 				return user
 			}
 
-			
+			const permission = `${req.$endpoint.service.name}.${req.$endpoint.action.rawName}`
 
-			const { permissions = [], needEntity = false, name } = req.$endpoint.action;
+			let res = await ctx.call("v1.roles.hasAccess", { roles: ctx.meta.roles, permissions: [permission] });
 
-			let res = false;
-			if (permissions.length > 0) {
-				res = await ctx.call("v1.roles.hasAccess", { roles: ctx.meta.roles, permissions: permissions });
-			} else {
-				res = true;
-			}
-			
+		
 			if (res !== true)
 				throw new UnAuthorizedError("You have no right for this operation!", 401, "ERR_HAS_NO_ACCESS", { roles: ctx.meta.roles });
-
 
 			return user
 		},
@@ -179,14 +172,6 @@ module.exports = {
 				}
 			}
 			return null;
-		},
-
-		async signInSocialUser(params, cb) {
-			try {
-				cb(null, await this.broker.call("v1.accounts.socialLogin", params));
-			} catch (err) {
-				cb(err);
-			}
 		}
 	},
 
@@ -200,34 +185,13 @@ module.exports = {
 	 * Service started lifecycle event handler
 	 */
 	async started() {
-		const port = process.env.PORT || 4000
-		const address = process.env.ADDRESS || '0.0.0.0'
-	
-		// this.broker.waitForServices(["v1.noc"]).then(async () => {
 
-		// 	this.host = await this.broker.call('v1.noc.httpRouteRegister', {
-		// 		vHost: '',
-		// 		address,
-		// 		port,
-		// 	})
-		// 	console.log(this.host)
-		// });
 	},
 
 	/**
 	 * Service stopped lifecycle event handler
 	 */
 	async stopped() {
-		const port = process.env.PORT || 4000
-		const address = process.env.ADDRESS || '0.0.0.0'
-		
-		// console.log(await this.broker.call('v1.noc.httpRouteUnregister', {
-		// 	vHost: '',
-		// 	address,
-		// 	port,
-		// }))
+
 	}
-
-
-
 };
