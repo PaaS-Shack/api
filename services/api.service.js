@@ -13,25 +13,7 @@ module.exports = {
 	name: "api",
 	version: 1,
 	mixins: [
-		// Gateway
-		ApiGateway,
-
-		// Passport
-		// PassportMixin({
-		// 	routePath: "/auth",
-		// 	localAuthAlias: "v1.accounts.login",
-		// 	successRedirect: "/",
-		// 	providers: {
-		// 		google: false,//process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
-		// 		facebook: false,// process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET,
-		// 		github: false,//process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET,
-		// 		twitter: false
-		// 	}
-		// }),
-
-
-		// Socket.IO handler
-		SocketIOMixin
+		ApiGateway
 	],
 
 	metadata: {},
@@ -95,18 +77,6 @@ module.exports = {
 					json: { limit: "2MB" },
 					urlencoded: { extended: true, limit: "2MB" }
 				}
-			},
-
-
-			/**
-			 * Static routes
-			 */
-			{
-				path: "/",
-				use: [history(), ApiGateway.serveStatic("public", {})],
-
-				mappingPolicy: "restrict"
-				//logging: false
 			}
 		],
 
