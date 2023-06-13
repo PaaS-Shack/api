@@ -69,8 +69,10 @@ module.exports = {
 
 				aliases: {},
 
-				// Disable to call not-mapped actions
-				//mappingPolicy: "restrict",
+				onBeforeCall(ctx, route, req, res) {
+					//strip any scope actions from params.
+                    delete ctx.params.scope;
+                },
 
 				// Use bodyparser modules
 				bodyParsers: {
