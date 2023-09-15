@@ -71,13 +71,14 @@ module.exports = {
 
 				onBeforeCall(ctx, route, req, res) {
 					//strip any scope actions from params.
-                    delete ctx.params.scope;
+					if(ctx.maras)
+                    	delete ctx.params.scope;
 					
                     ctx.meta.userAgent = req.headers["user-agent"];
-					if(req.headers["X-GitHub-Event"])
-                    	ctx.meta.githubEvent = req.headers["X-GitHub-Event"];
-					if(req.headers["X-Hub-Signature"])
-                    	ctx.meta.githubSignature = req.headers["X-Hub-Signature"];
+					if(req.headers["x-gitHub-event"])
+                    	ctx.meta.githubEvent = req.headers["x-gitHub-event"];
+					if(req.headers["x-hub-signature"])
+                    	ctx.meta.githubSignature = req.headers["x-hub-signature"];
                 },
 
 				// Use bodyparser modules
